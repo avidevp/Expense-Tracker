@@ -208,13 +208,20 @@ app.post("/login", passport.authenticate("local"), function (req, res) {
   });
 });
 
-app.get("/submit", function (req, res) {
+app.get("/getexpense", function (req, res) {
   res.set(
     "Cache-Control",
     "no-cache, private, no-store, must-revalidate, max-stal   e=0, post-check=0, pre-check=0"
   );
   if (req.isAuthenticated()) {
-    res.render("submit");
+    Expense.findOne({ email: req.session.passport.user })
+    .exec()
+    .then((docs)=>{
+      console.log(docs.expense);
+      res.render("viewExpense",{expense: docs.expense});
+    })
+
+    
   } else {
     res.redirect("/login");
   }
