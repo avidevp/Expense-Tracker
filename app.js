@@ -77,12 +77,23 @@ passport.deserializeUser(User.deserializeUser());
 // expense.save();
 
 app.get("/", function (req, res) {
-  res.render("index");
+  var loggedIn = 0;
+  if (req.isAuthenticated()) {
+    loggedIn = 1;
+  }
+  res.render("index", { loggedIn });
+});
+app.get("/index", function (req, res) {
+  var loggedIn = 0;
+  if (req.isAuthenticated()) {
+    loggedIn = 1;
+  }
+  res.render("index", { loggedIn });
 });
 app.get("/register", function (req, res) {
   if (req.isAuthenticated()) {
-    res.render("index");
-  } else res.render("register");
+    res.render("index", { loggedIn: 1 });
+  } else res.render("register", { loggedIn: 0 });
 });
 app.get("/login", function (req, res) {
   res.set(
@@ -90,8 +101,8 @@ app.get("/login", function (req, res) {
     "no-cache, private, no-store, must-revalidate, max-stal   e=0, post-check=0, pre-check=0"
   );
   if (req.isAuthenticated()) {
-    res.render("index");
-  } else res.render("login");
+    res.render("index", { loggedIn: 1 });
+  } else res.render("login", { loggedIn: 0 });
 });
 
 app.get("/addexpense", function (req, res) {
@@ -173,7 +184,7 @@ app.post("/register", function (req, res) {
   if (x != y) {
     res.redirect("/register");
   } else {
-    console.log('a',req.body.username,req.body.password);
+    console.log("a", req.body.username, req.body.password);
     User.register(
       { username: req.body.username },
       req.body.password,
@@ -202,7 +213,7 @@ app.post("/login", passport.authenticate("local"), function (req, res) {
     } else {
       passport.authenticate("local")(req, res, function () {
         console.log(user);
-        res.redirect("/");
+        res.redirect("index");
       });
     }
   });
@@ -215,13 +226,11 @@ app.get("/getexpense", function (req, res) {
   );
   if (req.isAuthenticated()) {
     Expense.findOne({ email: req.session.passport.user })
-    .exec()
-    .then((docs)=>{
-      console.log(docs.expense);
-      res.render("viewExpense",{expense: docs.expense});
-    })
-
-    
+      .exec()
+      .then((docs) => {
+        console.log(docs.expense);
+        res.render("viewExpense", { expense: docs.expense });
+      });
   } else {
     res.redirect("/login");
   }
