@@ -23,88 +23,170 @@
       rel="stylesheet"
       href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
     />
-    <style>
-      .table-center {
-        margin: 2rem auto;
-      }
-    </style>
-  </head>
-  <body body style="background-color: white; text-align: center">
-    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">Spending Tracker</a>
-        <button
-          class="btn btn-primary dropdown-toggle"
-          type="button"
-          data-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-person-circle"
-            viewBox="0 0 16 16"
-          >
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-            <path
-              fill-rule="evenodd"
-              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-            />
-          </svg>
-          <span class="caret"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav">
-            <li>
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
-            </li>
-            <li>
-              <a class="nav-link active" aria-current="page" href="/addexpense"
-                >Add Expense</a
+    <link rel="stylesheet" href="../public/css/usericon.css" />
+  </head>
+  <body body style="text-align: center; color: white">
+    <nav
+      class="navbar navbar-expand-lg p-3"
+      style="
+        background-color: #140941;
+        color: white;
+        box-shadow: 0px 11px 12px -3px #000000;
+      "
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/" style="color: #e9043a"
+          ><h3>SpendTracker</h3></a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a
+                class="nav-link mx-2 active"
+                aria-current="page"
+                href="/"
+                style="color: #ffff"
+                >Home</a
               >
             </li>
-          </ul>
-
-          <div style="position: absolute; right: 1rem">
-            <div class="dropdown">
+            <li class="nav-item">
+              <a
+                class="nav-link mx-2 active"
+                aria-current="page"
+                href="/addexpense"
+                style="color: #ffff"
+                >Add New Expense</a
+              >
+            </li>
+            <li class="nav-item dropdown">
               <button
-                class="btn btn-primary dropdown-toggle"
+                class="btn dropdown-toggle"
                 type="button"
                 data-toggle="dropdown"
                 aria-expanded="false"
+                style="
+                  background-color: #140941;
+                  border-width: 0;
+                  padding-top: 0;
+                "
               >
-                User <span class="caret"></span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  fill="white"
+                  class="bi bi-person-circle"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                  />
+                </svg>
+                <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><a class="nav-link" href="/logout">Log Out</a></li>
+                <li>
+                  <a class="dropdown-item" href="/logout" style="color: #e9043a"
+                    >Logout</a
+                  >
+                </li>
               </ul>
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
-    <h2>Expenses</h2>
+
+    <br /><br />
+    <h1 class="display-5" style="text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.68)">
+      Expenses
+    </h1>
     <br /><br />
     <% expense.forEach(function(data) { %>
-    <h4><%= data.date %></h4>
+    <h3  style="display: inline-block"><%= data.date %></h3>
+    <form
+      method="POST"
+      style="display: inline-block"
+      action="/delete/date/<%=data.date%>"
+    >
+      <button
+        type="submit"
+        class="btn-close"
+        style="border-style: none;"
+      >
+        
+      </button>
+    </form>
     <table
-      class="table table-dark table-striped table-hover table table-bordered table-center"
+      class="table table-light table-striped table-hover table table-bordered table-center"
       style="width: 70%"
     >
-      <tr class="table-dark">
+      <tr class="table-light">
         <th scope="col">Amount</th>
         <th scope="col">Description</th>
+        <th scope="col">Delete</th>
       </tr>
       <% data.content.forEach(function(item) { %>
-      <tr class="table-dark">
+      <tr class="table-light">
         <td><%= item.amount %></td>
         <td><%= item.description %></td>
+        <td>
+          <form
+            method="POST"
+            action="row/<%=item._id%>/<%=data.date%>?_method=DELETE"
+          >
+            <button
+              type="submit"
+              class="btn btn-outline-secondary"
+              style="border-style: none; padding-top: 0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x-circle-fill"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                />
+              </svg>
+            </button>
+          </form>
+        </td>
       </tr>
       <% }); %>
     </table>
+    <hr
+      style="
+        border: 0;
+        height: 1px;
+        background-image: -webkit-linear-gradient(
+          left,
+          #f0f0f0,
+          #8c8b8b,
+          #f0f0f0
+        );
+        background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+        background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+        background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+      "
+    />
     <% }); %>
   </body>
 </html>

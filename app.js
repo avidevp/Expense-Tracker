@@ -8,14 +8,17 @@ const passportLocalMongooose = require("passport-local-mongoose");
 const path = require("path");
 const moment = require("moment/moment");
 const app = express();
-app.use(express.static("public"));
+const methodOverride = require("method-override");
+const connectFlash = require("connect-flash");
+
+app.use(express.static(__dirname));
 app.set("view engine", "ejs");
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    extended: false,
   })
 );
-
+app.use(bodyParser.json());
 app.use(
   session({
     secret: "wfwr89f59w98w1f981W98F1W988",
@@ -23,9 +26,10 @@ app.use(
     saveUninitialized: true,
   })
 );
-
+app.use(methodOverride("_method"));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(connectFlash());
 
 mongoose.connect("mongodb://127.0.0.1:27017/expenseDB", {
   useNewUrlParser: true,
@@ -45,17 +49,20 @@ const userSchema = new mongoose.Schema({
 const expenseSchema = new mongoose.Schema({
   email: String,
   // total: { type: Number, required: true, default: 10000 },
-  expense: [
-    {
-      date: Date,
-      content: [
-        {
-          description: String,
-          amount: Number,
-        },
-      ],
-    },
-  ],
+  expense: {
+    type: [
+      {
+        date: Date,
+        content: [
+          {
+            description: String,
+            amount: Number,
+          },
+        ],
+      },
+    ],
+    required: true,
+  },
 });
 userSchema.plugin(passportLocalMongooose);
 const User = new mongoose.model("user", userSchema);
@@ -92,17 +99,18 @@ app.get("/index", function (req, res) {
 });
 app.get("/register", function (req, res) {
   if (req.isAuthenticated()) {
-    res.render("index", { loggedIn: 1 });
-  } else res.render("register", { loggedIn: 0 });
+    res.render("index");
+  } else res.render("register", { message: null });
 });
 app.get("/login", function (req, res) {
-  res.set(
-    "Cache-Control",
-    "no-cache, private, no-store, must-revalidate, max-stal   e=0, post-check=0, pre-check=0"
-  );
   if (req.isAuthenticated()) {
-    res.render("index", { loggedIn: 1 });
-  } else res.render("login", { loggedIn: 0 });
+    res.render("index");
+  } else {
+    if(req.flash("error")[0])
+    res.render("login", { message: 'Password or username is incorrect' });
+    else
+    res.render("login",{message:null})
+  }
 });
 
 app.get("/addexpense", function (req, res) {
@@ -111,8 +119,7 @@ app.get("/addexpense", function (req, res) {
     "no-cache, private, no-store, must-revalidate, max-stal   e=0, post-check=0, pre-check=0"
   );
   if (req.isAuthenticated()) {
-    console.log(req.session.passport.user);
-    res.render("addNewExpense");
+    res.render("addNewExpense", { message: null });
   } else {
     res.redirect("/login");
   }
@@ -134,7 +141,6 @@ app.post("/addexpense", function (req, res) {
         existing.expense.forEach((element) => {
           var d = moment(element.date);
           d = d.format("YYYY-MM-DD");
-          console.log("b", d == req.body.date, d, req.body.date);
           if (d == req.body.date) {
             element.content.push({
               description: req.body.description,
@@ -143,7 +149,6 @@ app.post("/addexpense", function (req, res) {
             flag = 1;
           }
         });
-        console.log(existing);
         if (!flag) {
           existing.expense = [
             ...docs.expense,
@@ -155,7 +160,6 @@ app.post("/addexpense", function (req, res) {
             },
           ];
         }
-        console.log("a", existing);
         existing.save();
       } else {
         const expense = new Expense({
@@ -184,16 +188,16 @@ app.post("/register", function (req, res) {
   if (x != y) {
     res.redirect("/register");
   } else {
-    console.log("a", req.body.username, req.body.password);
     User.register(
       { username: req.body.username },
       req.body.password,
-      function (err, user) {
-        if (err) {
-          console.log(err);
-          res.redirect("/register");
+      function (error, user) {
+        if (error) {
+          req.flash("registrationErrors", "User already exists");
+          res.render("register", { message: req.flash("registrationErrors") });
         } else {
           passport.authenticate("local")(req, res, function () {
+            req.flash("registrationErrors", null);
             res.redirect("/");
           });
         }
@@ -202,22 +206,14 @@ app.post("/register", function (req, res) {
   }
 });
 
-app.post("/login", passport.authenticate("local"), function (req, res) {
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password,
-  });
-  req.login(user, function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("local")(req, res, function () {
-        console.log(user);
-        res.redirect("index");
-      });
-    }
-  });
-});
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })
+);
 
 app.get("/getexpense", function (req, res) {
   res.set(
@@ -228,12 +224,65 @@ app.get("/getexpense", function (req, res) {
     Expense.findOne({ email: req.session.passport.user })
       .exec()
       .then((docs) => {
-        console.log(docs.expense);
-        res.render("viewExpense", { expense: docs.expense });
+        if (docs && docs.expense.length) {
+          var unsorted = docs.expense.map((item) => {
+            return {
+              date: moment(item.date).format("YYYY-MM-DD"),
+              content: [...item.content],
+            };
+          });
+          unsorted.sort(function (a, b) {
+            return moment(a.date) - moment(b.date);
+          });
+          req.flash("noData", "");
+          res.render("viewExpense", { expense: unsorted });
+        } else {
+          req.flash("noData", "No data present");
+          res.render("addNewExpense", { message: req.flash("noData") });
+        }
       });
   } else {
     res.redirect("/login");
   }
+});
+
+app.delete("/row/:id/:date", function (req, res) {
+  const id = req.params.id;
+  const date = req.params.date;
+  const user = req.session.passport.user;
+  Expense.findOneAndUpdate(
+    {
+      email: user,
+      "expense.date": date,
+    },
+    {
+      $pull: {
+        "expense.$.content": { _id: id },
+      },
+    },
+    { new: true }
+  )
+    .exec()
+    .then((docs) => {
+      res.redirect("/getexpense");
+    });
+});
+app.post("/delete/date/:date", function (req, res) {
+  const date = req.params.date;
+  const user = req.session.passport.user;
+  Expense.findOneAndUpdate(
+    {
+      email: user,
+    },
+    {
+      $pull: { expense: { date: date } },
+    },
+    { new: true }
+  )
+    .exec()
+    .then((docs) => {
+      res.redirect("/getexpense");
+    });
 });
 
 app.get("/logout", function (req, res, next) {
