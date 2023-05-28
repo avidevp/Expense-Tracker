@@ -87,7 +87,6 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                
                 <li>
                   <a
                     class="dropdown-item"
@@ -96,22 +95,18 @@
                     >Register</a
                   >
                 </li>
-                
               </ul>
             </li>
           </ul>
-          
         </div>
       </div>
     </nav>
     <div class="center">
       <h1>Login</h1>
-      <% if (message) {%>
-        <div class="alert alert-primary" role="alert">
-          <%=message%>
-        </div>
-        <% } %>
-      <form method="post">
+      <% if (message) { %>
+      <div class="alert alert-primary" role="alert"><%=message%></div>
+      <% } %>
+      <form method="post" action="/login">
         <div class="txt_field">
           <input type="email" name="username" required />
           <label> Username</label>

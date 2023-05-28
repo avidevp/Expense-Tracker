@@ -106,10 +106,9 @@ app.get("/login", function (req, res) {
   if (req.isAuthenticated()) {
     res.render("index");
   } else {
-    if(req.flash("error")[0])
-    res.render("login", { message: 'Password or username is incorrect' });
-    else
-    res.render("login",{message:null})
+    if (req.flash("error")[0])
+      res.render("login", { message: "Password or username is incorrect" });
+    else res.render("login", { message: null });
   }
 });
 
@@ -266,6 +265,11 @@ app.delete("/row/:id/:date", function (req, res) {
     .then((docs) => {
       res.redirect("/getexpense");
     });
+});
+app.delete("/delete/account", function (req, res) {
+  const user = req.session.passport.user;
+  User.deleteOne({ username: user }).exec().then();
+  res.redirect("/logout");
 });
 app.post("/delete/date/:date", function (req, res) {
   const date = req.params.date;

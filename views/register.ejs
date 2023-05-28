@@ -87,20 +87,14 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                
                 <li>
-                  <a
-                    class="dropdown-item"
-                    href="/login"
-                    style="color: #e9043a"
+                  <a class="dropdown-item" href="/login" style="color: #e9043a"
                     >Login</a
                   >
                 </li>
-                
               </ul>
             </li>
           </ul>
-          
         </div>
       </div>
     </nav>
@@ -108,11 +102,9 @@
     <div class="center">
       <h1>Register</h1>
       <% if (message) { %>
-        <div class="alert alert-primary" role="alert">
-          <%=message%>
-        </div>
-        <% } %>
-      <form method="post">
+      <div class="alert alert-primary" role="alert"><%=message%></div>
+      <% } %>
+      <form method="post" action="/register">
         <div class="txt_field">
           <input type="email" name="username" required />
           <label> Username</label>
