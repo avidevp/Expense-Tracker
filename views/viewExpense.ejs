@@ -26,7 +26,7 @@
 
     <link rel="stylesheet" href="../public/css/usericon.css" />
   </head>
-  <body body style="text-align: center; color: white">
+  <body body style="text-align: center">
     <nav
       class="navbar navbar-expand-lg p-3"
       style="
@@ -98,7 +98,7 @@
                 </svg>
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style="min-width: min-content">
                 <li>
                   <a class="dropdown-item" href="/logout" style="color: #e9043a"
                     >Logout</a
@@ -112,7 +112,7 @@
                     data-toggle="modal"
                     data-target="#exampleModal"
                   >
-                    Delete Account
+                    Delete User
                   </a>
                 </li>
               </ul>
@@ -123,16 +123,19 @@
     </nav>
 
     <br /><br />
-    <h1 class="display-5" style="text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.68)">
+    <h1
+      class="display-5"
+      style="text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.68); color: white"
+    >
       Expenses
     </h1>
     <br /><br />
     <% expense.forEach(function(data) { %>
-    <h3 style="display: inline-block"><%= data.date %></h3>
+    <h3 style="display: inline-block; color: white"><%= data.date %></h3>
     <form
       method="POST"
       style="display: inline-block"
-      action="/delete/date/<%=data.date%>"
+      action="/delete/date/<%=data.date%>?_method=DELETE"
     >
       <button
         type="submit"
@@ -216,6 +219,7 @@
               class="close"
               data-dismiss="modal"
               aria-label="Close"
+              style="border: none; background-color: white"
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -238,5 +242,6 @@
         </div>
       </div>
     </div>
+    <footer></footer>
   </body>
 </html>

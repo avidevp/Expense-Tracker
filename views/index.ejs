@@ -99,7 +99,7 @@
                 </svg>
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style="min-width: min-content">
                 <% if (!loggedIn) { %>
                 <li>
                   <a class="dropdown-item" href="/login" style="color: #e9043a"
@@ -128,7 +128,7 @@
                     data-toggle="modal"
                     data-target="#exampleModal"
                   >
-                    Delete Account
+                    Delete User
                   </a>
                 </li>
                 <% } %>
@@ -204,6 +204,7 @@
               class="close"
               data-dismiss="modal"
               aria-label="Close"
+              style="border: none; background-color: white"
             >
               <span aria-hidden="true">&times;</span>
             </button>

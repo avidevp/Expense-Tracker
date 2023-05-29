@@ -95,7 +95,7 @@
                 </svg>
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style="min-width: min-content">
                 <li>
                   <a class="dropdown-item" href="/logout" style="color: #e9043a"
                     >Logout</a
@@ -109,7 +109,7 @@
                     data-toggle="modal"
                     data-target="#exampleModal"
                   >
-                    Delete Account
+                    Delete User
                   </a>
                 </li>
               </ul>
@@ -138,7 +138,7 @@
             Description</label
           >
         </div>
-        <input type="submit" value="Register" />
+        <input type="submit" value="Submit" />
         <div class="signup_link">
           See existing expenses? <a href="/getexpense">View</a>
         </div>
@@ -163,6 +163,7 @@
               class="close"
               data-dismiss="modal"
               aria-label="Close"
+              style="border: none; background-color: white"
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -185,5 +186,6 @@
         </div>
       </div>
     </div>
+    <footer></footer>
   </body>
 </html>
