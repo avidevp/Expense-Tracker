@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -6,7 +7,7 @@ const passport = require("passport");
 const app = express();
 const methodOverride = require("method-override");
 const connectFlash = require("connect-flash");
-require('dotenv').config();
+
 const User = require("./database/user.js");
 const homePageController = require("./controllers/homePage.js");
 const getRegisterController = require("./controllers/getRegister.js");
