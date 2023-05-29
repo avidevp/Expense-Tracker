@@ -58,5 +58,5 @@ module.exports = (req, res) => {
         expense.save();
       }
     });
-  res.redirect("/");
+  res.redirect("/addexpense");
 };
