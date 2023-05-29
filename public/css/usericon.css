@@ -5,6 +5,13 @@
 .table-center {
   margin: 2rem auto;
 }
+
+.about{
+  width: 70%;
+  margin: 2rem auto 1rem auto;
+  color: white;
+}
+
 .btn {
   -webkit-border-radius: 20;
   -moz-border-radius: 20;

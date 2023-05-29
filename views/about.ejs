@@ -1,10 +1,8 @@
-<!-- data.ejs -->
-<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>View Expenses | SpenTrackr</title>
+    <title>About | SpenTrackr</title>
     <link rel="apple-touch-icon" sizes="180x180" href="../public/images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../public/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../public/images/favicon-16x16.png">
@@ -28,10 +26,9 @@
       rel="stylesheet"
       href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
     />
-
     <link rel="stylesheet" href="../public/css/usericon.css" />
   </head>
-  <body body style="text-align: center">
+  <body>
     <nav
       class="navbar navbar-expand-lg p-3"
       style="
@@ -55,6 +52,7 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
@@ -66,15 +64,18 @@
                 >Home</a
               >
             </li>
+            <% if (loggedIn) { %>
             <li class="nav-item">
-              <a
-                class="nav-link mx-2 active"
-                aria-current="page"
-                href="/addexpense"
-                style="color: #ffff"
-                >Add New Expense</a
+              <a class="nav-link mx-2" href="/addexpense" style="color: #ffff"
+                >New Expense</a
               >
             </li>
+            <li class="nav-item">
+              <a class="nav-link mx-2" href="/getexpense" style="color: #ffff"
+                >Show Expense</a
+              >
+            </li>
+            <% } %>
             <li class="nav-item dropdown">
               <button
                 class="btn dropdown-toggle"
@@ -104,9 +105,24 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" style="min-width: min-content">
+                <% if (!loggedIn) { %>
+                <li>
+                  <a class="dropdown-item" href="/login" style="color: #e9043a"
+                    >Login</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="/register"
+                    style="color: #e9043a"
+                    >Register</a
+                  >
+                </li>
+                <% } %> <% if (loggedIn) { %>
                 <li>
                   <a class="dropdown-item" href="/logout" style="color: #e9043a"
-                    >Logout</a
+                    >Log Out</a
                   >
                 </li>
                 <li>
@@ -120,91 +136,37 @@
                     Delete User
                   </a>
                 </li>
+                <% } %>
               </ul>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+    <div class="about">
+    <div
+      class="row text-start"
+    >
+    <p class="fs-2" style="color: #e9043a;">About</p>
+    </div>
+    <div
+      class="row text-start"
+    >
+    <p >Introducing SpenTrackr - Your Personal Expense Management App
 
-    <br /><br />
-    <h1
-      class="display-5"
-      style="text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.68); color: white"
-    >
-      Expenses
-    </h1>
-    <br /><br />
-    <% expense.forEach(function(data) { %>
-    <h3 style="display: inline-block; color: white"><%= data.date %></h3>
-    <form
-      method="POST"
-      style="display: inline-block"
-      action="/delete/date/<%=data.date%>?_method=DELETE"
-    >
-      <button
-        type="submit"
-        class="btn-close"
-        style="border-style: none"
-      ></button>
-    </form>
-    <table
-      class="table table-light table-striped table-hover table table-bordered table-center"
-      style="width: 70%"
-    >
-      <tr class="table-light">
-        <th scope="col">Amount</th>
-        <th scope="col">Description</th>
-        <th scope="col">Delete</th>
-      </tr>
-      <% data.content.forEach(function(item) { %>
-      <tr class="table-light">
-        <td><%= item.amount %></td>
-        <td><%= item.description %></td>
-        <td>
-          <form
-            method="POST"
-            action="row/<%=item._id%>/<%=data.date%>?_method=DELETE"
-          >
-            <button
-              type="submit"
-              class="btn btn-outline-secondary"
-              style="border-style: none; padding-top: 0"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-x-circle-fill"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
-                />
-              </svg>
-            </button>
-          </form>
-        </td>
-      </tr>
-      <% }); %>
-    </table>
-    <hr
-      style="
-        border: 0;
-        height: 1px;
-        background-image: -webkit-linear-gradient(
-          left,
-          #f0f0f0,
-          #8c8b8b,
-          #f0f0f0
-        );
-        background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-        background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-        background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-      "
-    />
-    <% }); %>
+        Welcome to SpenTrackr, the ultimate solution for effortlessly tracking and managing your expenses. We understand that keeping a close eye on your Spening habits is essential for financial well-being. That's why we've created this intuitive and powerful app to help you take control of your finances. <br><br>
+        
+        At SpenTrackr, we believe that being aware of your Spening patterns is the first step towards financial success. Our app provides you with a seamless experience to monitor and analyze your expenses, empowering you to make informed financial decisions. Whether you're a budget-conscious individual, a seasoned investor, or someone looking to improve their financial health, SpenTrackr is designed to cater to your needs. <br><br>        
+        
+        We prioritize the security and privacy of your financial information. Rest assured that your data is encrypted and stored securely, providing you with peace of mind as you track your Spening habits within the app. <br><br>
+        
+        SpenTrackr is more than just an expense tracker; it's a financial companion that empowers you to achieve your financial goals. Our user-friendly interface, coupled with powerful features, ensures that managing your expenses becomes a seamless and enjoyable experience. <br><br>
+        
+        Join thousands of individuals who have already transformed their financial lives with SpenTrackr. Take charge of your expenses, gain financial independence, and unlock a brighter future. <br><br>
+        
+        Download SpenTrackr today and embark on a journey towards financial success!</p>
+    </div>
+    </div>
     <!-- Button trigger modal -->
     <!-- Modal -->
     <div
@@ -247,6 +209,10 @@
         </div>
       </div>
     </div>
-    <footer></footer>
+    <footer>
+      <div style="position: absolute; bottom: 0; background-color: white">
+        <h6>Copyright © Avinash Thakur</h6>
+      </div>
+    </footer>
   </body>
 </html>

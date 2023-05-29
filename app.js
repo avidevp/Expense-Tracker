@@ -21,6 +21,7 @@ const deleteRowItemController = require("./controllers/deleteRowItem.js");
 const logoutController = require("./controllers/logout.js");
 const postLoginController = require("./controllers/postLogin.js");
 const showExpenseController = require("./controllers/getShowExpense.js");
+const aboutController = require("./controllers/getAbout.js");
 
 app.use(express.static(__dirname));
 app.set("view engine", "ejs");
@@ -55,6 +56,8 @@ passport.deserializeUser(User.deserializeUser());
 app.get("/", homePageController);
 
 app.get("/index", homePageController);
+
+app.get("/about", aboutController);
 
 app.get("/register", getRegisterController);
 
