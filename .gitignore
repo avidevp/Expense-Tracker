@@ -1,1 +1,40 @@
-node_modules
+# Logs
+logs
+*.log
+npm-debug.log*
+
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+
+# Optional npm cache directory
+.npm
+
+
+
+# dotenv environment variables file
+.env
+.env.test
+.env.production
+
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+

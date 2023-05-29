@@ -6,11 +6,10 @@ const passport = require("passport");
 const app = express();
 const methodOverride = require("method-override");
 const connectFlash = require("connect-flash");
-
+require('dotenv').config();
 const User = require("./database/user.js");
 const homePageController = require("./controllers/homePage.js");
 const getRegisterController = require("./controllers/getRegister.js");
-// const Controller = require("./controllers/.js")
 const getLoginController = require("./controllers/getLogin.js");
 const getAddExpenseController = require("./controllers/getAddExpense.js");
 const postAddExpenseController = require("./controllers/postAddExpense.js");
@@ -32,7 +31,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(
   session({
-    secret: "wfwr89f59w98w1f981W98F1W988",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
   })
@@ -42,7 +41,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(connectFlash());
 
-mongoose.connect("mongodb://127.0.0.1:27017/expenseDB", {
+mongoose.connect(process.env.API_KEY, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
